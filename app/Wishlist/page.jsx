@@ -1,10 +1,11 @@
+'use client';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ProductCard } from '@/src/components/ProductCard.jsx';
 import { Button } from '@/src/components/ui/button.jsx';
 import { Heart } from 'lucide-react';
 
-export function Wishlist() {
+export default function Wishlist() {
     const [wishlistItems, setWishlistItems] = useState([
         {
             id: 1,
@@ -52,7 +53,7 @@ export function Wishlist() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                     {wishlistItems.map(product => (
-                        <ProductCard key={product.id} product={product} />
+                        <ProductCard key={product.id} productId={product.id} product={product} />
                     ))}
                 </div>
             </div>

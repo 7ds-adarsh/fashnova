@@ -29,7 +29,7 @@ export default function About() {
                             <p className="text-muted-foreground mb-6">
                                 We carefully curate each piece in our collection, working directly with renowned designers and emerging talents to bring you exclusive, premium fashion that speaks to your individual style.
                             </p>
-                            <Button className="gold-gradient text-background">Explore Our Collection</Button>
+                            <Button onClick={() => window.location.href = '/Shop'} className="gold-gradient text-background">Explore Our Collection</Button>
                         </div>
                         <div className="relative">
                             <ImageWithFallback

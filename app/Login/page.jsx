@@ -1,13 +1,15 @@
+'use client';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-// import { useAuth } from '../contexts/AuthContext.jsx';
+import Link from 'next/link';
 import { Button } from '@/src/components/ui/button.jsx';
 import { Input } from '@/src/components/ui/input.jsx';
 import { Label } from '@/src/components/ui/label.jsx';
-import { Separator } from '@@/app/src/components/ui/separator.jsx';
+import { Separator } from '@/src/components/ui/separator.jsx';
 import { Eye, EyeOff } from 'lucide-react';
+import { useSession, signIn, signOut } from "next-auth/react"
 
-export function Login() {
+export default function Login() {
+    const { data: session } = useSession();
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -17,8 +19,17 @@ export function Login() {
         rememberMe: false
     });
 
-    const { signIn, signInWithOAuth } = useAuth();
-    const navigate = useNavigate();
+    const handleOAuthSignIn = async (provider) => {
+        setLoading(true);
+        try {
+            await signIn(provider, { callbackUrl: '/' });
+        } catch (err) {
+            console.error(err);
+            setError('Something went wrong. Please try again.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -26,22 +37,43 @@ export function Login() {
         setError('');
 
         try {
-            await signIn(formData.email, formData.password);
-            navigate('/account');
-        } catch (error) {
-            setError(error.message || 'Failed to sign in');
+            const res = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: formData.email,
+                    password: formData.password,
+                }),
+            });
+
+            const text = await res.text();  // Read raw text first
+            let data;
+
+            try {
+                data = JSON.parse(text);    // Try to parse only if not empty
+            } catch (err) {
+                console.error('❌ Failed to parse JSON:', text);
+                setError('Invalid server response');
+                return;
+            }
+
+            if (!res.ok || !data.success) {
+                setError(data?.message || 'Invalid credentials');
+                return;
+            }
+
+            // ✅ Login successful
+            window.location.href = '/Account';
+
+        } catch (err) {
+            console.error(err);
+            setError('Something went wrong. Please try again.');
         } finally {
             setLoading(false);
         }
     };
 
-    const handleOAuthSignIn = async (provider) => {
-        try {
-            await signInWithOAuth(provider);
-        } catch (error) {
-            setError(error.message || `Failed to sign in with ${provider}`);
-        }
-    };
+
 
     return (
         <main className="py-20">
@@ -105,7 +137,7 @@ export function Login() {
                                     />
                                     <span className="text-sm">Remember me</span>
                                 </label>
-                                <Link to="/forgot-password" className="text-sm text-secondary hover:underline">
+                                <Link href="/forgot-password" className="text-sm text-secondary hover:underline">
                                     Forgot password?
                                 </Link>
                             </div>
@@ -127,7 +159,7 @@ export function Login() {
                                 </span>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4 mt-4">
+                            <div className="flex">
                                 <Button
                                     variant="outline"
                                     className="w-full"
@@ -136,25 +168,13 @@ export function Login() {
                                 >
                                     Google
                                 </Button>
-                                <Button
-                                    variant="outline"
-                                    className="w-full"
-                                    onClick={() => handleOAuthSignIn('facebook')}
-                                    type="button"
-                                >
-                                    Facebook
-                                </Button>
                             </div>
-
-                            <p className="text-xs text-muted-foreground text-center mt-2">
-                                Note: Complete OAuth setup at <a href="https://supabase.com/docs/guides/auth/social-login/auth-google" target="_blank" rel="noopener noreferrer" className="text-secondary hover:underline">Supabase OAuth docs</a>
-                            </p>
                         </div>
 
                         <div className="text-center mt-6">
                             <p className="text-sm text-muted-foreground">
                                 Don't have an account?{' '}
-                                <Link to="/register" className="text-secondary hover:underline">
+                                <Link href="/Register" className="text-secondary hover:underline">
                                     Sign up
                                 </Link>
                             </p>

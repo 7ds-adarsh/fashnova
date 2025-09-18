@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 // import { apiClient } from '../utils/api.js';
-import { InitializeData } from '@/app/src/components/InitializeData.jsx';
+import { InitializeData } from '@/src/components/initializeData.jsx';
 import { ProductCard } from '@/src/components/ProductCard.jsx';
 import { Button } from '@/src/components/ui/button.jsx';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/src/components/ui/select.jsx';
@@ -30,26 +30,32 @@ export default function Shop() {
         setError('');
 
         try {
-            const filters = {
-                search: searchTerm || undefined,
-                category: category !== 'all' ? category : undefined,
-                limit: 20
-            };
+            const query = new URLSearchParams();
+            if (searchTerm) query.set('search', searchTerm);
+            if (category !== 'all') query.set('category', category);
+            if (sortBy !== 'featured') query.set('sort', sortBy);
 
-            // Uncomment and use your API client here
-            // const response = await apiClient.getProducts(filters);
-            // setProducts(response.products.map(product => ({
-            //     ...product,
-            //     price: `${product.price}`,
-            //     image: product.images?.[0] || "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400&h=400&fit=crop"
-            // })));
-        } catch (error) {
-            console.error('Error fetching products:', error);
-            setError('Failed to load products. Please try again.');
+            const res = await fetch(`/api/product?${query.toString()}`);
+            const data = await res.json();
+
+            if (data.success) {
+                const formatted = data.products.map(p => ({
+                    id: p._id,
+                    name: p.title,
+                    price: `₹${p.price}`,
+                    image: p.images?.[0] || '/fallback.jpg'
+                }));
+                setProducts(formatted);
+            } else {
+                setError('Failed to load products');
+            }
+        } catch (err) {
+            setError('Something went wrong');
         } finally {
             setLoading(false);
         }
     };
+
 
     const categories = [
         { value: 'all', label: 'All Categories' },
@@ -147,7 +153,7 @@ export default function Shop() {
                 {!loading && (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                         {products.map(product => (
-                            <ProductCard key={product.id} product={product} />
+                            <ProductCard key={product.id} productId={product.id} {...product} />
                         ))}
                     </div>
                 )}

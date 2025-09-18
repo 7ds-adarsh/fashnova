@@ -1,12 +1,14 @@
 'use client';
 import { useState } from 'react';
-import { ShoppingCart, Heart, Search } from 'lucide-react';
+import { ShoppingCart, Heart, Search, LogIn, User, Settings, ArrowDown } from 'lucide-react';
 import { Button } from '@/src/components/ui/button.jsx';
 import { SearchBar } from '@/src/components/ui/SearchBar.jsx';
 import Link from 'next/link';
+import { useSession, signIn, signOut } from "next-auth/react"
 
 export function Header() {
     const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
+    const { data: session } = useSession()
 
     return (
         <header className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -18,7 +20,6 @@ export function Header() {
                             <Link href="/" className="text-muted-foreground hover:text-white transition-colors">Home</Link>
                             <Link href="/Shop" className="text-muted-foreground hover:text-white transition-colors">Shop</Link>
                             <Link href="/About" className="text-muted-foreground hover:text-white transition-colors">About</Link>
-                            <Link href="/Contact" className="text-muted-foreground hover:text-white transition-colors">Contact</Link>
                         </nav>
                     </div>
 
@@ -41,14 +42,35 @@ export function Header() {
                             <Search className="h-5 w-5" />
                         </Button>
 
-                        <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-white">
+                        <Button onClick={() => window.location.href = '/Wishlist'} variant="ghost" size="sm" className="text-muted-foreground hover:text-white">
                             <Heart className="h-5 w-5" />
                             <span className="hidden sm:inline ml-1">Wishlist</span>
                         </Button>
-                        <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-white">
+                        <Button onClick={() => window.location.href = '/Cart'} variant="ghost" size="sm" className="text-muted-foreground hover:text-white">
                             <ShoppingCart className="h-5 w-5" />
                             <span className="hidden sm:inline ml-1">Cart (0)</span>
                         </Button>
+                        {session ? (
+                            // dropdown
+                            <div onMouseEnter={() => document.querySelector('.tab').classList.remove('hidden')} onMouseLeave={() => document.querySelector('.tab').classList.add('hidden')} className="relative inline-block">
+                                <Button
+                                    variant="default" size="sm" className="text-muted-foreground hover:text-white">
+                                    <User className="h-5 w-5" />
+                                    <span className="hidden sm:inline ml-1">{session.user.name}</span>
+                                    <ArrowDown className="h-5 w-5" />
+                                </Button>
+                                <div className="tab absolute z-50 right-0 mt-2 w-48 py-2 bg-purple-950 border border-border rounded-md shadow-md hidden">
+                                    <Link href="/Account" className="block px-4 py-2 text-sm text-muted-foreground hover:bg-border hover:text-white transition-colors">Profile</Link>
+                                    <Link href="/Settings" className="block px-4 py-2 text-sm text-muted-foreground hover:bg-border hover:text-white transition-colors">Settings</Link>
+                                    <button onClick={() => signOut()} className="block px-4 py-2 text-sm text-muted-foreground hover:bg-border hover:text-white transition-colors">Logout</button>
+                                </div>
+                            </div>
+                        ) : (
+                            <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-white" onClick={() => window.location.href = '/Login'}>
+                                <LogIn className="h-5 w-5" />
+                                <span className="hidden sm:inline ml-1">Login</span>
+                            </Button>
+                        )}
                     </div>
                 </div>
 

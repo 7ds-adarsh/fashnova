@@ -1,21 +1,22 @@
+'use client';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-// import { useAuth } from '../contexts/AuthContext.jsx';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/src/components/ui/button.jsx';
 import { Input } from '@/src/components/ui/input.jsx';
 import { Label } from '@/src/components/ui/label.jsx';
 import { Separator } from '@/src/components/ui/separator.jsx';
 import { Checkbox } from '@/src/components/ui/checkbox.jsx';
 import { Eye, EyeOff } from 'lucide-react';
+import { useSession, signIn, signOut } from "next-auth/react";
 
-export function Register() {
+export default function Register() {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
+        username: '',
         email: '',
         password: '',
         confirmPassword: '',
@@ -23,8 +24,8 @@ export function Register() {
         subscribeNewsletter: true
     });
 
-    const { signUp, signInWithOAuth } = useAuth();
-    const navigate = useNavigate();
+    const { data: session } = useSession();
+    const router = useRouter();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -44,25 +45,36 @@ export function Register() {
         }
 
         try {
-            await signUp({
-                email: formData.email,
-                password: formData.password,
-                firstName: formData.firstName,
-                lastName: formData.lastName
+            const res = await fetch('/api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: formData.username,
+                    email: formData.email,
+                    password: formData.password
+                })
             });
-            navigate('/account');
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.message || 'Failed to create account');
+            }
+
+            router.push('/Account');
         } catch (error) {
-            setError(error.message || 'Failed to create account');
+            setError(error.message);
         } finally {
             setLoading(false);
         }
     };
 
+
     const handleOAuthSignUp = async (provider) => {
         try {
-            await signInWithOAuth(provider);
-        } catch (error) {
-            setError(error.message || `Failed to sign up with ${provider}`);
+            await signIn(provider, { callbackUrl: "/" }); // Redirect after sign in
+        } catch (err) {
+            setError(err.message || `Failed to sign up with ${provider}`);
         }
     };
 
@@ -171,11 +183,11 @@ export function Register() {
                                     />
                                     <Label htmlFor="terms" className="text-sm">
                                         I agree to the{' '}
-                                        <Link to="/terms" className="text-secondary hover:underline">
+                                        <Link href="/terms" className="text-secondary hover:underline">
                                             Terms of Service
                                         </Link>{' '}
                                         and{' '}
-                                        <Link to="/privacy" className="text-secondary hover:underline">
+                                        <Link href="/privacy" className="text-secondary hover:underline">
                                             Privacy Policy
                                         </Link>
                                     </Label>
@@ -210,7 +222,7 @@ export function Register() {
                                 </span>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4 mt-4">
+                            <div className="flex justify-center">
                                 <Button
                                     variant="outline"
                                     className="w-full"
@@ -218,14 +230,6 @@ export function Register() {
                                     type="button"
                                 >
                                     Google
-                                </Button>
-                                <Button
-                                    variant="outline"
-                                    className="w-full"
-                                    onClick={() => handleOAuthSignUp('facebook')}
-                                    type="button"
-                                >
-                                    Facebook
                                 </Button>
                             </div>
 
@@ -237,7 +241,7 @@ export function Register() {
                         <div className="text-center mt-6">
                             <p className="text-sm text-muted-foreground">
                                 Already have an account?{' '}
-                                <Link to="/login" className="text-secondary hover:underline">
+                                <Link href="/login" className="text-secondary hover:underline">
                                     Sign in
                                 </Link>
                             </p>

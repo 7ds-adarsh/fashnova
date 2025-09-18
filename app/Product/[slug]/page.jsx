@@ -1,3 +1,4 @@
+"use client";
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ImageWithFallback } from '@/public/Fallback.jsx';
@@ -9,7 +10,7 @@ import { Heart, ShoppingCart, Share2, Star, ArrowLeft } from 'lucide-react';
 // import { useAuth } from '../contexts/AuthContext.jsx';
 // import { useCart } from '../contexts/CartContext.jsx';
 
-export function Product() {
+export default function Product() {
     const { slug } = useParams(); // This will work for both slugs and IDs
     const navigate = useNavigate();
     const { isAuthenticated } = useAuth();
