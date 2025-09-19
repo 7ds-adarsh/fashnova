@@ -1,10 +1,10 @@
 import { connectDB } from '@/src/lib/db';
 import Cart from '@/models/Cart';
-import { Product } from '@/models/Product';
+import Product from '@/models/Product';
 import PromoCode from '@/models/PromoCode';
 import User from '@/models/User';
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '../auth/[...nextauth]/route';
 import { z } from 'zod';
 import mongoose from 'mongoose';
 import * as Sentry from '@sentry/nextjs';

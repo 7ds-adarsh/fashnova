@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 // import { apiClient } from '../utils/api.js';
 import { InitializeData } from '@/src/components/initializeData.jsx';

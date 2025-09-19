@@ -1,7 +1,7 @@
 // app/api/products/route.js
 
 import { connectDB } from '@/src/lib/db.js';
-import { Product } from '@/models/Product';
+import Product from '@/models/Product';
 import { NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
 import slugify from 'slugify';
