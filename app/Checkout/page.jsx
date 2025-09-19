@@ -1,5 +1,6 @@
+"use client";
 import { useState } from 'react';
-import { ImageWithFallback } from '@/public/Fallback.jsx';
+import { ImageWithFallback } from '@/src/components/Fallback.jsx';
 import { Button } from '@/src/components/ui/button.jsx';
 import { Input } from '@/src/components/ui/input.jsx';
 import { Label } from '@/src/components/ui/label.jsx';

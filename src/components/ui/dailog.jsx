@@ -1,10 +1,11 @@
+"use client";
 import { forwardRef, useState } from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { X } from 'lucide-react';
 import { cn } from '@/src/components/ui/utils.js';
 import { Button } from '@/src/components/ui/button.jsx';
 import { Input } from '@/src/components/ui/input.jsx';
-import { Textarea } from '@/src/components/ui/textarea.jsx';
+import { Textarea } from '@/src/components/ui/Textarea.jsx';
 
 const Dialog = DialogPrimitive.Root;
 const DialogTrigger = DialogPrimitive.Trigger;
