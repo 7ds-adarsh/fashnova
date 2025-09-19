@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { ImageWithFallback } from '@/public/Fallback.jsx';
+import { ImageWithFallback } from '@/src/components/Fallback';
 import { Button } from '@/src/components/ui/button.jsx';
 import { Input } from '@/src/components/ui/input.jsx';
 import { Separator } from '@/src/components/ui/separator.jsx';

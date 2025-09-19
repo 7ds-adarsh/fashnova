@@ -1,5 +1,5 @@
 'use client';
-import { ImageWithFallback } from '@/public/Fallback.jsx';
+import { ImageWithFallback } from '@/src/components/Fallback';
 import { Button } from '@/src/components/ui/button.jsx';
 
 export default function About() {

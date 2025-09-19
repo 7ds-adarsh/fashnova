@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ImageWithFallback } from '@/public/Fallback.jsx';
+import { ImageWithFallback } from '@/src/components/Fallback';
 import { Button } from '@/src/components/ui/button.jsx';
 import { Badge } from '@/src/components/ui/badge.jsx';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/src/components/ui/tabs.jsx';

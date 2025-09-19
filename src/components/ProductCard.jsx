@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Button } from '@/src/components/ui/button.jsx';
 import { Card, CardContent } from '@/src/components/ui/card.jsx';
-import { ImageWithFallback } from '@/public/Fallback.jsx';
+import { ImageWithFallback } from '@/src/components/Fallback';
 
 export function ProductCard({ name, price, image, productId, id, _id, product }) {
     const [loading, setLoading] = useState(false);
