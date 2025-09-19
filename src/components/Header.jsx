@@ -15,7 +15,7 @@ export function Header() {
             <div className="container mx-auto px-4 py-4">
                 <div className="flex items-center justify-between gap-8">
                     <div className="flex items-center space-x-8">
-                        <Link href="/"><h1 className="text-2xl font-bold text-white">Fashnova</h1></Link>
+                        <Link href="/"><h1 className="text-2xl font-bold text-white">propadvisors.homes/amodha</h1></Link>
                         <nav className="hidden lg:flex items-center space-x-6">
                             <Link href="/" className="text-muted-foreground hover:text-white transition-colors">Home</Link>
                             <Link href="/Shop" className="text-muted-foreground hover:text-white transition-colors">Shop</Link>

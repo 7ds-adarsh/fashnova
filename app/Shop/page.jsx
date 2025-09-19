@@ -9,6 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@/src/components/ui/input.jsx';
 import { Search, Filter } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+
 export default function Shop() {
     const searchParams = useSearchParams();
     const router = useRouter();

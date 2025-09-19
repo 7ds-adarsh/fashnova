@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Fashnova",
+  title: "propadvisors.homes/amodha",
   description: "A modern e-commerce platform for jewelry and accessories",
 };
 

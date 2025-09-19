@@ -9,7 +9,9 @@ import { Separator } from '@/src/components/ui/separator.jsx';
 import { Trash2, Plus, Minus, ShoppingBag } from 'lucide-react';
 import ReactGA from 'react-ga4';
 
-ReactGA.initialize(process.env.NEXT_PUBLIC_GA_ID);
+if (process.env.NEXT_PUBLIC_GA_ID) {
+    ReactGA.initialize(process.env.NEXT_PUBLIC_GA_ID);
+}
 
 export default function Cart() {
     const { data: session, status } = useSession();
